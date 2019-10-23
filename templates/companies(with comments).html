@@ -1,0 +1,256 @@
+{% extends 'base.html' %}
+{% block content %}
+
+    {% if companies.count > 0 %}
+    <h2>List of companies</h2>
+    <table>
+        <thead><th>Company</th><th>Quota</th><th></th></thead>
+        {% for company in companies %}      <!--people из функции index-->
+        <tr>
+            <td>{{ company.name }}</td>
+            <td>{{ company.quota }} TB</td>
+            <td><a href="edit/{{company.id}}">Edit</a> | <a href="delete/{{company.id}}">Remove</a></td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    {% endif %}
+    <a href="new_company/">Add new company</a>
+
+
+
+    <div id="starting">             <!--starting-->
+        <div class="container">     <!--container-->
+            <div class="row">       <!--row-->
+                <h1>List of Companies
+                    <button  type="button" class="btn btn-primary" data-toggle="modal" data-target="#addCompanyModal">ADD COMPANY</button>
+                </h1>
+{#          &emsp;#}
+{#          <div class="form-inline my-2 my-lg-0" style="margin-left: 40%;">#}
+{#            <input class="form-control mr-sm-2" type="text" placeholder="Search" v-model="search_term" aria-label="Search">#}
+{#            <button class="btn btn-outline-success my-2 my-sm-0" v-on:click.prevent="getCompanies()">Search</button>#}
+{#          </div>#}
+
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <!--<th scope="col">#</th>-->
+                            <th scope="col">Company Name</th>
+                            <th scope="col">Quota</th>
+                            <th scope="col">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="company in companies">
+                            <td>${company.name}</td>
+                            <td>${company.quota}</td>
+                            <td>
+                                <button class="btn btn-info" v-on:click="getCompany(company.id)">Edit</button>
+                                <button class="btn btn-danger" v-on:click="deleteCompany(company.id)">Remove</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <!-- Add Company Modal -->
+                <div class="modal fade" id="addCompanyModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLongTitle">ADD COMPANY</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <form v-on:submit.prevent="addCompany()">
+                                <div class="modal-body">
+                                    <div class="form-group">
+                                        <label for="name">Company name</label>
+                                        <input
+                                            type="text"
+                                            class="form-control"
+                                            id="name"
+                                            placeholder="Enter name"
+                                            v-model="newCompany.name"
+                                            required="required" >
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="quota">Company quota</label>
+                                        <input
+                                            type="number"
+                                            class="form-control"
+                                            id="quota"
+                                            placeholder="Enter Quota"
+                                            v-model="newCompany.quota"
+                                            required="required">
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary m-progress" data-dismiss="modal">Close</button>
+                                    <button type="submit" class="btn btn-primary">Save changes</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="loading" v-if="loading===true">Loading&#8230;</div>
+                </div>
+                <!-- End of add company modal -->
+
+                <!-- Edit Company Modal -->
+                <div class="modal fade" id="editCompanyModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLongTitle">EDIT COMPANY</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <form v-on:submit.prevent="updateCompany()">
+                                <div class="modal-body">
+                                    <div class="form-group">
+                                        <label for="name">Company name</label>
+                                        <input
+                                            type="text"
+                                            class="form-control"
+                                            id="name"
+                                            placeholder="Enter Company name"
+                                            v-model="currentCompany.name"
+                                            required="required" >
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="quota">Company quota</label>
+                                        <input
+                                            type="number"
+                                            class="form-control"
+                                            id="quota"
+                                            placeholder="Enter Company quota"
+                                            v-model="currentCompany.quota"
+                                            required="required">
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary m-progress" data-dismiss="modal">Close</button>
+                                    <button type="submit" class="btn btn-primary">Save changes</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="loading" v-if="loading===true">Loading&#8230;</div>
+                </div>
+                <!-- End of edit company modal -->
+
+            </div>     <!--end row-->
+        </div>      <!--end container-->
+
+        <div class="loading" v-if="loading===true">Loading&#8230;</div>
+
+    </div>          <!--end starting-->
+
+  <!-- bootrtap js files -->
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+{#  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>#}
+{#  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>#}
+
+  <!-- vue.js files -->
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.5.13/dist/vue.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vue-resource@1.3.5"></script>
+
+
+
+
+  <script type="text/javascript">
+
+    new Vue({
+      el: '#starting',          // применяется ко всему блоку
+      delimiters: ['${','}'],   // чтобы не было конфликтов с Django, меняем разделители на   ${    }
+      data: {
+        companies: [],          // начальный пустой список компаний, который заполняется по запросу методом getCompanies
+        loading: true,          // отображение процесса загрузки
+        currentCompany: {},     // текущая компания получается из запроса посредством метода getCompany
+                                // к REST api странице в виде словаря, например:
+                                // {"id":12,"url":"http://127.0.0.1:8000/api/companies/12/","name":"qwert","quota":"4.00","users":[]},
+                                // где users - список словарей с данными о связанных юзерах
+        {#message: null,#}
+        newCompany: { 'name': null, 'quota': null },    // начальные пустые значения для newCompany в форме Add Company,
+                                                        // которые потом берутся из формы и обрабатываются методом addCompany
+        {#search_term: '',#}
+      },
+      mounted: function() {     // после того, как элемент starting добавлен и у него есть необходимая разметка и все необходимые данные,
+        this.getCompanies();    // можно взаимодействовать с ним, т.е. изменить его внутренние данные (например, заполнить данными):
+      },                        // здесь вызывается функция getCompanies
+      methods: {
+        getCompanies: function() {
+          //let api_url = '/api/companies/';
+          //if(this.search_term!==''||this.search_term!==null) {
+          //  api_url = `/api/companies/?search=${this.search_term}`
+          //}
+          this.loading = true;
+          //this.$http.get(api_url)
+          this.$http.get('/api/companies/')
+              .then((response) => {
+                this.companies = response.data;     // заполняем список компаний словарями с данными о компаниях из REST api
+                this.loading = false;
+              })
+              .catch((err) => {
+                this.loading = false;
+                console.log(err);
+              })
+        },
+        getCompany: function(id) {               // id получаем вызовом функции кнопкой Edit: v-on:click="getCompany(company.id)"
+          this.loading = true;
+          this.$http.get(`/api/companies/${id}/`)       // обращаемся к странице REST api данной компании
+              .then((response) => {
+                this.currentCompany = response.data;    // присваиваем значение currentCompany из данных запроса к странице REST api
+                $("#editCompanyModal").modal('show');   // показываем скрытое модальное окно (div id='editCompanyModal' aria-hidden="true") после этого
+                this.loading = false;
+              })
+              .catch((err) => {
+                this.loading = false;
+                console.log(err);
+              })
+        },
+        addCompany: function() {
+          this.loading = true;
+          this.$http.post('/api/companies/',this.newCompany)    // добавляем компанию по данным, полученным из формы и присвоенным newCompany
+              .then((response) => {
+                this.loading = true;
+                this.getCompanies();                    // вызываем функцию для обновления таблицы
+                console.log('Company is added!!!')
+              })
+              .catch((err) => {
+                this.loading = true;
+                console.log(err);
+              })
+        },
+        updateCompany: function() {
+          this.loading = true;
+          this.$http.put(`/api/companies/${this.currentCompany.id}/`, this.currentCompany)  // при нажатии обновляются данные данной компании
+              .then((response) => {
+                this.loading = false;
+                this.currentCompany = response.data;
+                this.getCompanies();
+              })
+              .catch((err) => {
+                this.loading = false;
+                console.log(err);
+              })
+        },
+        deleteCompany: function(id) {           // id получаем вызовом функции кнопкой Remove: v-on:click="deleteCompany(company.id)"
+          this.loading = true;
+          this.$http.delete(`/api/companies/${id}/`)
+              .then((response) => {
+                this.loading = false;
+                this.getCompanies();
+              })
+              .catch((err) => {
+                this.loading = false;
+                console.log(err);
+              })
+        }
+      }
+    });
+ </script>
+
+
+{% endblock %}

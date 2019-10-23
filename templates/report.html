@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% block header %}Report for {{ month }}{% endblock header %}
+
+{% block content %}
+    <style>
+        .reference_back{
+            display: inline-block;
+            background: #3498db;
+            height: 40px;
+            width: 200px;
+            font-weight: bold;
+            border-radius: 5px;
+            text-align: center
+        }
+        .reference_back a{
+            color: white;
+            display: block;
+            line-height:40px;
+            border-radius: 5px;
+        }
+        .reference_back a:hover{
+            text-decoration: none;
+            background: royalblue;
+        }
+    </style>
+
+    <h1>Report for {{ month }}</h1>
+    <table class="table">
+        <thead><th>Company</th><th>Transferred (Quota)</th></thead>
+    {% for string in items %}
+        <tr>
+            <td>{{ string.name }}</td>
+            <td><span>{{ string.transferred }} TB</span>  <span style="padding-left: 15px">({{ string.quota }} TB)</span></td>
+        </tr>
+
+    {% endfor %}
+    </table>
+    <br>
+    <p class="reference_back"><a href="/abusers/">« Back to Abusers</a></p>
+{% endblock %}

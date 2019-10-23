@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block content %}
+    <h1>Data generation and month selection</h1>
+    <form action="{% url 'gen_data' %}" method="post">
+        {% csrf_token %}
+        <button type="submit" value="Generate_data" class="btn btn-primary" style="margin-bottom: 10px">Generate data</button>
+    </form>
+
+    <form action="{% url 'create_report' %}" method="post">
+        {% csrf_token %}
+
+        <label for="month_dropdown">Month:</label>
+        <select name="month_dropdown" id="month_dropdown" class="form-control" style="width: 200px; display: inline">
+            <option value='nothing' selected disabled >Select month</option>
+        {% for key, value in dict_months.items %}
+            <option value="{{ key }}">{{ value }}</option>
+        {% endfor %}
+        </select>
+
+        <button type="submit" class="btn btn-primary">Show report</button>
+    </form>
+
+{#    {% if warning %}<b>{{ warning }}</b>{% endif %}#}
+
+{% endblock %}

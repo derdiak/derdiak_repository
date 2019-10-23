@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% block content %}
+
+    <form method="POST">
+        {% csrf_token %}
+        <label for="company_name">Company name<input type="text" name="company_name" id = 'company_name' {% if company %} value="{{company.name}}"{% endif %} /></label>
+        <br>
+        <label for="company_quota">Quota<input type="number" name="company_quota" id = 'company_quota' {% if company %} value="{{company.quota}}"{% endif %} /></label>
+        <br>
+        <input type="submit" value="Сохранить" >
+    </form>
+
+{% endblock %}

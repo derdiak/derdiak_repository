@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% block header %}Categories{% endblock %}
+{% block content %}
+    <style>
+        #vertical_menu ul{
+            margin:0;
+            padding:0;
+            list-style:none;
+            height:50px;
+        }
+
+        #vertical_menu ul li{
+            background-color: #3498db;
+            font-weight: bold;
+            border: solid blue;
+            width: 300px;
+            margin-bottom: 5px;
+        }
+
+        #vertical_menu ul li a{
+            color:#fff;
+            display:block;
+            height:50px;
+            padding:0 20px;
+            text-transform:uppercase;
+            text-decoration:none;
+            line-height:50px;
+        }
+
+        #vertical_menu ul li a:hover{
+            background:gold;
+            text-decoration: none;
+        }
+    </style>
+
+    <div id="vertical_menu">
+        <ul>
+            <li><a href="/companies/" title="Companies">Companies</a></li>
+            <li><a href="/users/" title="Users">Users</a></li>
+            <li><a href="/abusers/" title="Abusers">Abusers</a></li>
+        </ul>
+    </div>
+
+{% endblock %}

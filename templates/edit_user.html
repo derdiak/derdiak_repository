@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block content %}
+
+    <form method="POST">
+        {% csrf_token %}
+        <label for="user_name">Username<input type="text" name="user_name" id = 'user_name' {% if user %} value="{{user.name}}"{% endif %} /></label>
+        <br>
+        <label for="user_email">User's email<input type="email" name="user_email" id = 'user_email' {% if user %} value="{{user.email}}"{% endif %} /></label>
+        <br>
+
+        <label for="companies_dropdown">Company:</label>
+        <select name="companies_dropdown" id="companies_dropdown" style="margin: 25px 0">
+            <option selected disabled >Select company</option>
+        {% for chosen_company in companies %}
+            <option value="{{ chosen_company.id }}">{{ chosen_company.name }}</option>
+        {% endfor %}
+
+        </select>
+
+
+
+
+
+{#        <label for="user_company">User's company<input type="number" name="user_company" id = 'user_company' {% if user %} value="{{user.company}}"{% endif %} /></label>#}
+{#        <br>#}
+        <input type="submit" value="Сохранить" >
+    </form>
+
+{% endblock %}
